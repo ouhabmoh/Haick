@@ -23,7 +23,7 @@ print('Summary statistics of the dataset:\n', data.describe())
 print('Missing values in the dataset:\n', data.isnull().sum())
 
 # View the unique values of a categorical column in the dataset
-print(df["categorical_column"].unique())
+print(data["categorical_column"].unique())
 
 # Visualize the distribution of a numeric column
 sns.displot(data['column_name'], kde=False)
