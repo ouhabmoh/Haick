@@ -8,16 +8,16 @@ from scipy.stats import ttest_ind, chi2_contingency
 data = pd.read_csv('dataset.csv')
 
 # Drop rows with missing values
-df.dropna(inplace=True)
+data.dropna(inplace=True)
 
 # Fill missing values with mean
-df.fillna(df.mean(), inplace=True)
+data.fillna(data.mean(), inplace=True)
 
 # Fill missing values with median
-df.fillna(df.median(), inplace=True)
+data.fillna(data.median(), inplace=True)
 
 # Fill missing values with mode
-df.fillna(df.mode(), inplace=True)
+data.fillna(data.mode(), inplace=True)
 
 # Identify and handle missing values
 # Replace missing values in numeric columns with the median
