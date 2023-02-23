@@ -1,0 +1,28 @@
+logistic_regression:
+  C: 1.0
+  penalty: 'l2'
+  solver: 'liblinear'
+  
+support_vector_machine:
+  C: 1.0
+  kernel: 'rbf'
+  
+random_forest:
+  n_estimators: 100
+  max_depth: None
+  
+k_nearest_neighbors:
+  n_neighbors: 5
+  
+naive_bayes:
+  var_smoothing: 1e-09
+  
+adaboost:
+  n_estimators: 100
+  
+xgboost:
+  max_depth: 3
+  learning_rate: 0.1
+  n_estimators: 100
+  silent: true
+  objective: 'binary:logistic'
