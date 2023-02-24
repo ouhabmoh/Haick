@@ -9,10 +9,11 @@ from xgboost import XGBClassifier
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score
 import os
 import pickle
 import datetime
+import matplotlib.pyplot as plt
 
 # Load data
 data = pd.read_csv("path/to/dataset.csv")
@@ -50,6 +51,7 @@ if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
 # Train models and save to file
+accuracy_list = []
 for name, model in models:
     clf = Pipeline([
         ('scaler', StandardScaler()),
@@ -58,36 +60,19 @@ for name, model in models:
     grid_search = GridSearchCV(clf, params[name], cv=5, n_jobs=-1)
     grid_search.fit(X_train, y_train)
     model_path = os.path.join(model_dir, name + ".pkl")
+    y_pred = clf.predict(X_test)
+    acc = accuracy_score(y_test, y_pred)
+    accuracy_list.append(acc)
     with open(model_path, 'wb') as f:
         pickle.dump(grid_search.best_estimator_, f)
 
+# Plot accuracy for all models
+plt.bar([name for name, _ in models], accuracy_list)
+plt.ylim([0.0, 1.0])
+plt.xlabel('Model')
+plt.ylabel('Accuracy')
+plt.title('Model Accuracy Comparison')
+plt.show()
 
-# Evaluate models and save results to file
-results_file = os.path.join(model_dir, "results.txt")
-with open(results_file, 'w') as f:
-    for name, model in models:
-        clf = Pipeline([
-            ('scaler', StandardScaler()),
-            ('model', model)
-        ])
-        clf.fit(X_train, y_train)
-        y_pred = clf.predict(X_test)
-        acc = accuracy_score(y_test, y_pred)
-        cm = confusion_matrix(y_test, y_pred)
-        f.write("{}:\n".format(name))
-        f.write("Accuracy: {}\n".format(acc))
-        f.write("Confusion matrix:\n{}\n".format(cm))
-        f.write("\n")
-
-# Save models to file
-for name, model in models:
-    clf = Pipeline([
-        ('scaler', StandardScaler()),
-        ('model', model)
-    ])
-    clf.fit(X_train, y_train)
-    model_path = os.path.join(model_dir, name + ".pkl")
-    with open(model_path, 'wb') as f:
-        pickle.dump(clf, f)
 
 print("Models and results saved in {}".format(model_dir))
